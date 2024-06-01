@@ -1,29 +1,50 @@
-float r,x,y, angulo, radio;
+float radio;
 float rP,xP,yP,anguloP, radioP;
 boolean activarPowerUp;
+PImage fondo, gato1, power, enemigo, alien;
+PVector posEnemigo, posAlien;
+float deltaTime, seg;
+ArrayList<Balas> balas;
+int contador;
+
+
 void setup(){
   size(500,500);
-  r = 100;
-  angulo = 0;
+  deltaTime = 1.0/round(frameRate);
+  this.fondo = loadImage("data/back.jpg");
+  this.gato1 = loadImage("data/player.png");
+  this.power = loadImage("data/bullet.png");
+  this.enemigo = loadImage("data/tank.png");
+  this.alien = loadImage("data/alien.png");
+  posEnemigo = new PVector(width/2,50);
+  posAlien = new PVector(0,height/2);
+  balas = new ArrayList<Balas>();
+  activarPowerUp = false;
+  contador=0;
   radio = 20;
   rP = 20;
   anguloP = 0;
   radioP = 30;
-  activarPowerUp = false;
 }
 
 void draw(){
  background(255);
+ imageMode(CENTER);
+ image(fondo,width/2, height/2, width, height);
  fill(0,0,255);
- circle(mouseX,mouseY,radio);
+ //jugador
+ image(gato1,mouseX,mouseY,radio*2, radio*2);
  noFill();
  
- anguloP += 0.1;
- xP=width/2;
- yP=400+rP*sin(anguloP);
- fill(151,252,255 );
- circle(xP,yP,radioP);
-  
+ if (!activarPowerUp){
+   //powerup
+   anguloP += 0.1;
+   xP=width/2;
+   yP=400+rP*sin(anguloP);
+   fill(151,252,255 );
+   image(power,xP, yP,radioP*2, radioP*2);
+ }
+
  float distancia = dist(mouseX,mouseY,xP,yP);
  if(distancia<radio/2+radioP/2){
    activarPowerUp=true;
@@ -31,22 +52,29 @@ void draw(){
  }
  
  if (activarPowerUp){
-  for(float c=0; c<=9; c++){
-    angulo += 0.002;
-    x=mouseX+r*cos(angulo+c*0.62);
-    y=mouseY+r*sin(angulo+c*0.62);
-    fill(250,0,0);
-    circle(x,y,20);
-    println(c);
+   //enemigo
+   seg+=deltaTime;
+   posEnemigo.x = width/2 +width/2*sin(seg);
+   image(enemigo,posEnemigo.x, posEnemigo.y, 50, 50);
+   //disparos
+   if(contador==0){
+     Balas nuevaBala =new Balas(posEnemigo); 
+     balas.add(nuevaBala);
+     contador++;
    }
+   //alien
+   image(alien,posAlien.x, posAlien.y, 50, 50);
+   posAlien.y=height/2+200*cos(seg);
+   posAlien.x+=50*deltaTime;
  }
  
- 
-
- 
- //for(float a=0; a<360; a++){
- // x=mouseX+r*cos(a);
- // y=mouseY+r*sin(a);
- // point(x,y);
- //}
+ for(int i = balas.size()-1; i >= 0; i--){
+    Balas b = balas.get(i);
+    b.mover();
+    b.display();
+    if(b.getDestruir()){
+      balas.remove(i);
+      contador=0;
+    }
+  }
 }
