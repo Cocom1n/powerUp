@@ -1,23 +1,22 @@
-class Balas {
-  private PVector pos;
-  private float vel;
+class Balas extends GameObject{
+  
   PImage Image;
   boolean destruir;
   
   public Balas(PVector enemigo){
-    this.pos = new PVector(enemigo.x,enemigo.y);
-    this.vel=10;
+    setPos(new PVector(enemigo.x,enemigo.y));
+    setVel(15);
     this.Image = loadImage("data/bala.png");
     destruir=false;
   }
   
   public void display(){
-    image(Image, pos.x, pos.y, 50,50);
+    image(Image, getPos().x, getPos().y, 50,50);
   }
   
   public void mover(){
-    pos.y+=vel;
-    if(pos.y>=height){
+    getPos().y+=getVel();
+    if(getPos().y>=height){
       destruir=true;
     }
   }
