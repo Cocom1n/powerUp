@@ -5,13 +5,14 @@ class Balas extends GameObject{
   
   public Balas(PVector enemigo){
     setPos(new PVector(enemigo.x,enemigo.y));
-    setVel(15);
+    setTam(new PVector(50,50));
+    setVel(12);
     this.Image = loadImage("data/bala.png");
     destruir=false;
   }
   
   public void display(){
-    image(Image, getPos().x, getPos().y, 50,50);
+    image(Image, getPos().x, getPos().y, getTam().x,getTam().y);
   }
   
   public void mover(){

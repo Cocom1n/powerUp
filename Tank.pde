@@ -14,5 +14,12 @@ class Tank extends GameObject{
     getPos().x = width/2 +amplitud*sin(sec);
     image(imagen, getPos().x, getPos().y, getTam().x,getTam().y);
   }
+  
+  public void disparar(){
+    if (frameCount % 60 == 0 ) {
+      Balas nuevaBala =new Balas(enemigo.getPos()); 
+      balas.add(nuevaBala);
+    }
+  }
 
 }

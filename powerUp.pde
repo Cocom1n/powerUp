@@ -25,6 +25,7 @@ void draw(){
  imageMode(CENTER);
  image(fondo,width/2, height/2, width, height);
  gato.display();
+ gato.displayVida();
 
  if (!activarPowerUp){
    powerUp.display();
@@ -32,28 +33,29 @@ void draw(){
  
  //calcula la distancia entre el jugador y el Power up para activar el juego
  float distancia = dist(gato.getPos().x,gato.getPos().y,powerUp.getPos().x,powerUp.getPos().y);
- if(distancia < gato.getTam().x + powerUp.getTam().x){
+ if(distancia < gato.getTam().x/2 + powerUp.getTam().x/2){
    activarPowerUp=true;
  }
  
  if (activarPowerUp){
    alien.display();
+   gato.colicionAlien(alien.getPos(), alien.getTam().x);
+   
    enemigo.display();
-   //disparos
-   if(contador==0){
-     Balas nuevaBala =new Balas(enemigo.getPos()); 
-     balas.add(nuevaBala);
-     contador++;
-   }
- }
+    enemigo.disparar();
  
- for(int i = balas.size()-1; i >= 0; i--){
-    Balas b = balas.get(i);
-    b.mover();
-    b.display();
-    if(b.getDestruir()){
-      balas.remove(i);
-      contador=0;
+ 
+   for(int i = balas.size()-1; i >= 0; i--){
+      Balas b = balas.get(i);
+      b.mover();
+      b.display();
+      gato.colicionBala(b.getPos(),b.getTam().x);
+      if(gato.coliconBala){
+        balas.remove(i);
+      }
+      if(b.getDestruir()){
+        balas.remove(i);
+      }
     }
   }
 }

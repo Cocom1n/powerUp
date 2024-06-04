@@ -5,14 +5,19 @@ class Alien extends GameObject{
   
   public Alien(){
     this.imagen = loadImage("data/alien.png");
-    setPos(new PVector(0,height/2));
-    setTam(new PVector(50,50));
+    setPos(new PVector(0,0));
+    setTam(new PVector(60,60));
     setVel(75);
     amplitud=150;
     alienActivo=true;
+    
   }
   
   public void display(){
+    sec += Time.getDeltaTime(frameRate);
+    getPos().y = height/2 + amplitud*cos(sec);
+    image(imagen,getPos().x, getPos().y, getTam().x,getTam().y);
+
     if (getPos().x>=width+25){
       alienActivo=false;
     }
@@ -21,17 +26,10 @@ class Alien extends GameObject{
     }
     
     if(alienActivo){
-      sec += Time.getDeltaTime(frameRate);
       getPos().x+=getVel()*Time.getDeltaTime(frameRate);
-      getPos().y = height/2 + amplitud*cos(sec);
-      image(imagen,getPos().x, getPos().y, getTam().x,getTam().y);
     }else{
-      sec += Time.getDeltaTime(frameRate);
       getPos().x-=getVel()*Time.getDeltaTime(frameRate);
-      getPos().y = height/2 + amplitud*cos(sec);
-      image(imagen,getPos().x, getPos().y, getTam().x,getTam().y);
     }
-    
   }
   
 }
